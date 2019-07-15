@@ -5,3 +5,4 @@ html = urlopen("https://www.kkbox.com/tw/tc/column/index.html?fbclid=IwAR0IHVM8a
 bs = BeautifulSoup(html)
 for title in bs.findAll("a", {"class": "cover"}):
     print(title.attrs['title'])
+print("DONE")
