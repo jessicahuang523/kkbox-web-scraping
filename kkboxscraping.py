@@ -1,8 +1,30 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-html = urlopen("https://www.kkbox.com/tw/tc/column/index.html?fbclid=IwAR0IHVM8a7TArfW7PWnZctF12DWln6n3iQ92uCWuflf9SvC9IEY55RQpc3k")
-bs = BeautifulSoup(html)
-for title in bs.findAll("a", {"class": "cover"}):
-    print(title.attrs['title'])
-print("DONE")
+def getLink(url):
+    html = urlopen(url)
+    bs = BeautifulSoup(html)
+    return bs
+
+def scrapePage(link):
+    page = getLink(link)
+    articles = page.findAll("a", {"class": "cover"})
+    for article in articles:
+        news = getLink("http://www.kkbox.com"+article.attrs['href'])
+        title = news.find("h1")
+        contents = news.find("div", {"class": "column-article"}).findAll("p")
+        keywords = news.findAll("li", {"class": "keyword"})
+        print(">>>title<<<")
+        print(title.get_text())
+        print(">>>keyword<<<")
+        for keyword in keywords:
+            print(keyword.get_text())
+        print(">>>content<<<")
+        for content in contents:
+            print(content.get_text())
+        print("------------------------")
+
+home = "https://www.kkbox.com/hk/tc/column/index.html"
+scrapePage(home)
+for noPage in range(2, 4):
+    scrapePage(home + "?p=" + str(noPage))
