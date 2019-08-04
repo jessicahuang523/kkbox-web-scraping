@@ -46,7 +46,7 @@ data = {}
 data['音樂頭條'] = []
 
 home = "https://www.kkbox.com/hk/tc/column/index.html"
-for noPage in range(1, 4):
+for noPage in range(1, 817):
     scrapePage(home + "?p=" + str(noPage))
 
 writeJson(data)
