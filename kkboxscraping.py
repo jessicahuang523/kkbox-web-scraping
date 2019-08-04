@@ -42,6 +42,8 @@ def scrapePage(link):
         for metaTag in metaTags:
             newData['meta'][metaTag.attrs['property']] = metaTag.attrs['content']
         data['音樂頭條'].append(newData)
+
+
 data = {}
 data['音樂頭條'] = []
 
