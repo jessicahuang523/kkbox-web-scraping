@@ -14,3 +14,5 @@ class News():
         newData['內容'] = self.content
         newData['meta'] = self.meta
         return newData
+
+    

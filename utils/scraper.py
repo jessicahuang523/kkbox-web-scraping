@@ -1,6 +1,6 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from newsClass import News
+from model.News import News
 import re
 import json
 
@@ -12,11 +12,11 @@ def getLink(url):
 def writeJson(data):
     with open("output.json", "w") as file:
         json.dump(data, file, ensure_ascii=False, indent=2)
-        file.close
+        file.close()
 
 def scrapePage(link):
-    curPage = getLink(link)
-    articles = curPage.findAll("a", {"class": "cover"})
+    curlPage = getLink(link)
+    articles = curlPage.findAll("a", {"class": "cover"})
     for article in articles:
         news = getLink("http://www.kkbox.com"+article.attrs['href'])
         title = news.find("h1").get_text()
@@ -39,14 +39,5 @@ def scrapePage(link):
         for metaTag in metaTags:
             metaDict[metaTag.attrs['property']] = metaTag.attrs['content']
         newData = News(title, author, keywordArray, newContent, metaDict)
-        data['音樂頭條'].append(newData.writeData())
+        return newData.writeData()
 
-
-data = {}
-data['音樂頭條'] = []
-
-homePage = "https://www.kkbox.com/hk/tc/column/index.html"
-for numPage in range(1, 4):
-    scrapePage(homePage + "?p=" + str(numPage))
-
-writeJson(data)
