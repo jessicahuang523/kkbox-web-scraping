@@ -6,11 +6,11 @@ import json
 
 def getLink(url):
     html = urlopen(url)
-    bs = BeautifulSoup(html)
+    bs = BeautifulSoup(html, features="html.parser")
     return bs
 
 def writeJson(data):
-    with open("output.json", "w") as file:
+    with open("output/output.json", "w") as file:
         json.dump(data, file, ensure_ascii=False, indent=2)
         file.close()
 
