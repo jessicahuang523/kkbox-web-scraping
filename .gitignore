@@ -1,0 +1,10 @@
+# mac and system files
+.DS_Store
+*__pycache__
+.vscode
+
+# virtual env
+.venv
+
+# output folder
+output/*
