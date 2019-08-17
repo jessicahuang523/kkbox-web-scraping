@@ -14,7 +14,7 @@ def writeMongo(data):
     client = pymongo.MongoClient('localhost', 27017)
     db = client.kkbox
     collection = db.musicHeadlines
-    result = db.collection.insert_one(data)
+    result = collection.insert_one(data)
     print(result)
 
 def scrapePage(link):
