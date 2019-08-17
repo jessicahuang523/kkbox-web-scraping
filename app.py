@@ -1,4 +1,4 @@
-from utils.scraper import writeJson, scrapePage
+from utils.scraper import writeMongo, scrapePage
 
 if __name__ == "__main__":
     data = {}
@@ -9,4 +9,6 @@ if __name__ == "__main__":
         d = scrapePage(homePage + "?p=" + str(numPage))
         data['音樂頭條'].append(d)
 
-    writeJson(data)
+    writeMongo(data)
+
+

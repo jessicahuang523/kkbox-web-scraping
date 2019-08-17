@@ -3,16 +3,19 @@ from bs4 import BeautifulSoup
 from model.News import News
 import re
 import json
+import pymongo
 
 def getLink(url):
     html = urlopen(url)
     bs = BeautifulSoup(html, features="html.parser")
     return bs
 
-def writeJson(data):
-    with open("output/output.json", "w") as file:
-        json.dump(data, file, ensure_ascii=False, indent=2)
-        file.close()
+def writeMongo(data):
+    client = pymongo.MongoClient('localhost', 27017)
+    db = client.kkbox
+    collection = db.musicHeadlines
+    result = db.collection.insert_one(data)
+    print(result)
 
 def scrapePage(link):
     curlPage = getLink(link)
