@@ -6,5 +6,8 @@
 # virtual env
 .venv
 
+# os env
+.env
+
 # output folder
 output/*
