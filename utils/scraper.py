@@ -24,7 +24,6 @@ def writeMongo(client, data):
     db = client.kkbox
     collection = db.musicHeadlines
     collection.insert_one(data)
-    print("Done.")
 
 def scrapePage(link):
     curlPage = getLink(link)
@@ -52,4 +51,4 @@ def scrapePage(link):
         for metaTag in metaTags:
             metaDict[metaTag.attrs['property']] = metaTag.attrs['content']
         newData = News(title, author, keywordArray, newContent, metaDict)
-        return newData.writeData()
+        writeMongo(setup_Mongo(), newData.writeData())
