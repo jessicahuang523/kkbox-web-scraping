@@ -24,6 +24,7 @@ def construct_Mongo():
     client = setup_Mongo()
     db = client.kkbox
     collection = db.musicHeadlines
+    collection.create_index([("meta.og:url", pymongo.ASCENDING)])
     return collection
 
 def searchUrl(collection, link):
@@ -33,8 +34,10 @@ def searchUrl(collection, link):
         artLink = "http://www.kkbox.com"+article.attrs['href']
         result = collection.find_one({"meta.og:url": artLink})
         if result:
+            print("there")
             continue
         scrapePage(collection, artLink)
+        print("none")
 
 def scrapePage(collection, artLink):
     news = getLink(artLink)
