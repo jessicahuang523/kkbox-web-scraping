@@ -4,29 +4,36 @@ from model.News import News
 import re
 import json
 import pymongo
-import os
 
+first = True
 
-def getLink(url):
+def compare(news, settingCol, headlineCol):
+    d1 = news.find("div", {"class": "column-author-date"}).get_text()
+    d2 = settingCol.find_one({'標題': "上次更新"})['日期']
+    if d1>d2:
+        return 1
+    elif d1<d2:
+        return -1
+    else:
+        title = news.find("h1").get_text()
+        inDB = headlineCol.find_one({'標題': title})
+        if inDB:
+            return -1
+        else:
+            return 0
+
+def getBS(url):
     html = urlopen(url)
     bs = BeautifulSoup(html, features="html.parser")
     return bs
 
-def setup_Mongo():
-    if os.getenv("MongoDB"):
-        connection_string="mongodb+srv://" + os.getenv("Mongo_UserName") +':'+ os.getenv("Mongo_Password")+'@'+os.getenv("MongoDB")
-        client = pymongo.MongoClient(connection_string)
-    else:
-        client = pymongo.MongoClient('localhost', 27017)
-    db = client.kkbox
-    collection = db.musicHeadlines
-    return collection
-
-def scrapePage(collection, link):
-    curlPage = getLink(link)
-    articles = curlPage.findAll("a", {"class": "cover"})
+def scrapePage(headlineCol, settingCol, url):
+    curPage = getBS(url)
+    articles = curPage.findAll("a", {"class": "cover"})
     for article in articles:
-        news = getLink("http://www.kkbox.com"+article.attrs['href'])
+        news = getBS("http://www.kkbox.com"+article.attrs['href'])
+        if settingCol.count()!=0 and compare(news, settingCol, headlineCol)==-1:
+            return
         date = news.find("div", {"class": "column-author-date"}).get_text()
         title = news.find("h1").get_text()
         author = news.find(
@@ -49,4 +56,13 @@ def scrapePage(collection, link):
         for metaTag in metaTags:
             metaDict[metaTag.attrs['property']] = metaTag.attrs['content']
         newData = News(title, author, date, keywordArray, newContent, metaDict)
-        collection.insert_one(newData.writeData())
+        headlineCol.insert_one(newData.writeData())
+        global first
+        if first:
+            global latest
+            latest = date
+        first = False
+
+def writeSetting(settingCol):
+    global latest
+    settingCol.update({'標題': "上次更新"}, {'$set': {'日期': latest}}, upsert=True)
