@@ -12,7 +12,7 @@ if __name__ == "__main__":
     headline_collection = client.kkbox.headlines
     setting_collection = client.setting.last_update
     
-    for numPage in range(1, 6):
+    for numPage in range(1, 4):
         scrapePage(headline_collection, setting_collection, homePage + "?p=" + str(numPage))
     writeSetting(setting_collection)
 

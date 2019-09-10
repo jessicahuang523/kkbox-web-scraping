@@ -46,16 +46,12 @@ def scrapePage(headlineCol, settingCol, url):
                 albumPage = getBS(albumLink)
                 albumDict = {}
                 albumDict['專輯名稱'] = albumPage.find("h1").get_text()
-                print(albumDict['專輯名稱'])
                 artist = albumPage.find("div", {"class": "creator"}).find("dd").find("a")
                 if artist:
                     albumDict['藝人'] = artist.get_text().strip()
                 else:
                     albumDict['藝人'] = "Various Artists"
-                print(albumDict['藝人'])
                 albumDict['連結'] = albumLink
-                print(albumDict['連結'])
-                print(albumDict)
                 albumsArray.append(albumDict)
         else:
             albumsArray = None
