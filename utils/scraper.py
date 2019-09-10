@@ -5,7 +5,7 @@ from utils.scheduling import compare
 import re
 import pymongo
 
-
+# only the date of the first article matters since the articles are sorted from new to old
 first = True
 
 def getBS(url):
@@ -19,6 +19,7 @@ def scrapePage(headlineCol, settingCol, url):
     for article in articles:
         news = getBS("http://www.kkbox.com"+article.attrs['href'])
         if settingCol.count()!=0 and compare(news, settingCol, headlineCol)==-1:
+            # all new articles are scraped
             return
         date = news.find("div", {"class": "column-author-date"}).get_text()
         title = news.find("h1").get_text()
@@ -47,7 +48,9 @@ def scrapePage(headlineCol, settingCol, url):
         if first:
             global latest
             latest = date
+            # record the date of the first article
         first = False
+        # only do this once each time this program runs
 
 def writeSetting(settingCol):
     global latest
