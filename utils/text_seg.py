@@ -2,9 +2,9 @@ import pymongo
 import re
 from operator import itemgetter
 
-r = '[a-zA-Z0-9’!"#$%&\'()*+,-./:;<=>?@，。?★、…【】《》？“”‘’！[\\]^_`{|}~「」『』、：，。／　〉|〈（）｜ ]+'
 
-def ngram(n, col):
+def ngram_tfidf(n, col):
+    r = '[a-zA-Z0-9’!"#$%&\'()*+,-./:;<=>?@，。?★、…【】《》？“”‘’！[\\]^_`{|}~「」『』、：，。／　〉|〈（）｜ ]+'
     title = col.distinct("標題")
     content = col.distinct("內容")
     numOfArticle = col.count()
@@ -19,6 +19,9 @@ def ngram(n, col):
                 freq[word] = 1
             else:
                 freq[word] += 1
-        freq = sorted(freq.items(), key=itemgetter(1), reverse=True)
-        print(freq)
+        total = sum(freq.values())
+        for j in freq:
+            freq[j] = freq[j]/total
+        freqArray = sorted(freq.items(), key=itemgetter(1), reverse=True)
+        print(freqArray)
         print("---------------------------")

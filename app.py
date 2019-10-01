@@ -1,6 +1,6 @@
 from utils.setup import setup_Mongo
 from utils.scraper import scrapePage, writeSetting
-from utils.text_seg import ngram
+from utils.text_seg import ngram_tfidf
 from dotenv import load_dotenv
 import sys
 
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     for numPage in range(1, 4):
         scrapePage(headline_collection, setting_collection, homePage + "?p=" + str(numPage))
     writeSetting(setting_collection)
-    ngram(2, headline_collection)
+    ngram_tfidf(2, headline_collection)
     print("done")
 
 
