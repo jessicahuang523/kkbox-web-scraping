@@ -1,5 +1,8 @@
 import pymongo
+import re
 from operator import itemgetter
+
+r = '[a-zA-Z0-9’!"#$%&\'()*+,-./:;<=>?@，。?★、…【】《》？“”‘’！[\\]^_`{|}~「」『』、：，。／　〉|〈（）｜ ]+'
 
 def ngram(n, col):
     title = col.distinct("標題")
@@ -7,13 +10,15 @@ def ngram(n, col):
     numOfArticle = col.count()
     for i in range(0, numOfArticle):
         article = title[i] + content[i]
-        bifreq = {}
-        for i in range(0, len(article)-1):
-            bi = article[i:i+2]
-            if bi not in bifreq:
-                bifreq[bi] = 1
+        article = re.sub(r, '', article)
+        article = re.sub('\n', '', article)
+        freq = {}
+        for i in range(0, len(article)-(n-1)):
+            word = article[i:i+n]
+            if word not in freq:
+                freq[word] = 1
             else:
-                bifreq[bi] += 1
-        bifreq = sorted(bifreq.items(), key=itemgetter(1), reverse=True)
-        print(bifreq)
+                freq[word] += 1
+        freq = sorted(freq.items(), key=itemgetter(1), reverse=True)
+        print(freq)
         print("---------------------------")
