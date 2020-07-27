@@ -1,20 +1,20 @@
 import pymongo
 import re
 from operator import itemgetter
+from collection import Counter
 
 
-def ngram_tfidf(n, col):
+def form_all_chi_para(title, content):
     r = '[a-zA-Z0-9’!"#$%&\'()*+,-./:;<=>?@，。?★、…【】《》？“”‘’！[\\]^_`{|}~「」『』、：，。／　〉|〈（）｜ ]+'
-    title = col.distinct("標題")
-    content = col.distinct("內容")
-    numOfArticle = col.count()
-    for i in range(0, numOfArticle):
-        article = title[i] + content[i]
-        article = re.sub(r, '', article)
-        article = re.sub('\n', '', article)
+    para = title + content
+    para = re.sub(r, '', para)
+    para = re.sub('\n', '', para)
+    return para
+
+def ngram_tf(n, para):
         freq = {}
-        for i in range(0, len(article)-(n-1)):
-            word = article[i:i+n]
+        for i in range(0, len(para)-(n-1)):
+            word = para[i:i+n]
             if word not in freq:
                 freq[word] = 1
             else:
@@ -22,6 +22,8 @@ def ngram_tfidf(n, col):
         total = sum(freq.values())
         for j in freq:
             freq[j] = freq[j]/total
-        freqArray = sorted(freq.items(), key=itemgetter(1), reverse=True)
-        print(freqArray)
         print("---------------------------")
+        #freqArray = sorted(freq.items(), key=itemgetter(1), reverse=True)
+        return freq
+
+def idf():
